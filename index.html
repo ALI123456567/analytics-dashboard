@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytix | داشبورد آنالیتیکس</title>
+<style>
+:root{--primary:#6366f1;--primary-light:#818cf8;--accent:#10b981;--danger:#ef4444;--warning:#f59e0b;--bg:#0a0a0f;--bg-sidebar:#101018;--bg-card:#15151f;--bg-hover:#1c1c28;--text:#e4e4e7;--text-muted:#71717a;--border:rgba(255,255,255,0.06);--shadow:0 4px 24px rgba(0,0,0,0.4)}
+[data-theme="light"]{--bg:#f4f4f7;--bg-sidebar:#fff;--bg-card:#fff;--bg-hover:#f0f0f5;--text:#18181b;--text-muted:#71717a;--border:rgba(0,0,0,0.08);--shadow:0 4px 24px rgba(0,0,0,0.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Tahoma,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;transition:background .3s,color .3s}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:250px;background:var(--bg-sidebar);border-left:1px solid var(--border);padding:24px 16px;display:flex;flex-direction:column;position:fixed;top:0;right:0;bottom:0;z-index:50;transition:transform .3s}
+.brand{display:flex;align-items:center;gap:10px;padding:0 12px 24px;border-bottom:1px solid var(--border);margin-bottom:20px}
+.brand-logo{width:36px;height:36px;background:linear-gradient(135deg,var(--primary),#8b5cf6);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff}
+.brand-name{font-size:18px;font-weight:800;letter-spacing:-0.5px}
+.brand-name span{color:var(--primary)}
+.nav-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;padding:12px 12px 8px;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:10px;color:var(--text-muted);text-decoration:none;font-size:14px;font-weight:500;transition:all .2s;margin-bottom:2px;cursor:pointer}
+.nav-item:hover{background:var(--bg-hover);color:var(--text)}
+.nav-item.active{background:linear-gradient(90deg,rgba(99,102,241,0.15),transparent);color:var(--primary);border-right:3px solid var(--primary)}
+.nav-icon{font-size:17px;width:20px;text-align:center}
+.nav-badge{margin-right:auto;background:var(--danger);color:#fff;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:700}
+.sidebar-footer{margin-top:auto;padding-top:20px;border-top:1px solid var(--border)}
+.user-card{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;transition:background .2s;cursor:pointer}
+.user-card:hover{background:var(--bg-hover)}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#ef4444);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:14px}
+.user-info h4{font-size:13px;font-weight:600}
+.user-info p{font-size:11px;color:var(--text-muted)}
+.main{flex:1;margin-right:250px;padding:24px 32px;min-width:0}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;gap:20px;flex-wrap:wrap}
+.topbar h1{font-size:26px;font-weight:800;letter-spacing:-0.5px}
+.topbar p{color:var(--text-muted);font-size:13px;margin-top:4px}
+.topbar-actions{display:flex;align-items:center;gap:10px}
+.search-box{position:relative;display:flex;align-items:center}
+.search-box input{background:var(--bg-card);border:1px solid var(--border);color:var(--text);padding:10px 40px 10px 16px;border-radius:10px;font-size:13px;font-family:inherit;width:240px;outline:none;transition:border .2s}
+.search-box input:focus{border-color:var(--primary)}
+.search-box input::placeholder{color:var(--text-muted)}
+.search-icon{position:absolute;right:14px;color:var(--text-muted);font-size:14px;pointer-events:none}
+.icon-btn{width:40px;height:40px;background:var(--bg-card);border:1px solid var(--border);color:var(--text);border-radius:10px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;position:relative}
+.icon-btn:hover{border-color:var(--primary);color:var(--primary)}
+.notif-dot{position:absolute;top:8px;left:8px;width:8px;height:8px;background:var(--danger);border-radius:50%;border:2px solid var(--bg-card)}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-bottom:24px}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:22px;transition:all .3s;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(circle,rgba(99,102,241,0.15),transparent 70%)}
+.stat-card:hover{transform:translateY(-4px);border-color:rgba(99,102,241,0.4);box-shadow:var(--shadow)}
+.stat-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.stat-label{font-size:13px;color:var(--text-muted);font-weight:500}
+.stat-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.stat-icon.purple{background:rgba(99,102,241,0.15);color:var(--primary)}
+.stat-icon.green{background:rgba(16,185,129,0.15);color:var(--accent)}
+.stat-icon.orange{background:rgba(245,158,11,0.15);color:var(--warning)}
+.stat-icon.red{background:rgba(239,68,68,0.15);color:var(--danger)}
+.stat-value{font-size:30px;font-weight:800;letter-spacing:-1px;margin-bottom:6px}
+.stat-change{font-size:12px;font-weight:600;display:flex;align-items:center;gap:4px}
+.stat-change.up{color:var(--accent)}
+.stat-change.down{color:var(--danger)}
+.charts-grid{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:24px}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:24px}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.card-title{font-size:16px;font-weight:700}
+.card-subtitle{font-size:12px;color:var(--text-muted);margin-top:2px}
+.card-action{font-size:12px;color:var(--primary);background:none;border:none;cursor:pointer;font-family:inherit;font-weight:600}
+.bar-chart{display:flex;align-items:flex-end;justify-content:space-between;height:220px;gap:12px;padding:10px 0}
+.bar-wrapper{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end}
+.bar{width:100%;background:linear-gradient(180deg,var(--primary),var(--primary-light));border-radius:8px 8px 4px 4px;transition:all .3s;cursor:pointer;position:relative;min-height:20px}
+.bar:hover{background:linear-gradient(180deg,var(--accent),#34d399);transform:scaleY(1.05)}
+.bar-label{font-size:11px;color:var(--text-muted);font-weight:500}
+.donut-wrapper{display:flex;flex-direction:column;align-items:center;gap:20px}
+.donut{width:170px;height:170px;transform:rotate(-90deg)}
+.donut circle{fill:none;stroke-width:22;transition:stroke-dashoffset 1s ease}
+.donut-bg{stroke:var(--bg-hover)}
+.donut-seg{stroke-linecap:round}
+.donut-center{position:relative;margin-top:-115px;text-align:center;margin-bottom:15px}
+.donut-center h3{font-size:28px;font-weight:800;letter-spacing:-1px}
+.donut-center p{font-size:11px;color:var(--text-muted)}
+.legend{display:flex;flex-direction:column;gap:10px;width:100%}
+.legend-item{display:flex;align-items:center;gap:10px;font-size:13px}
+.legend-color{width:12px;height:12px;border-radius:4px}
+.legend-label{color:var(--text-muted)}
+.legend-value{margin-right:auto;font-weight:700;font-size:13px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{text-align:right;padding:12px 14px;color:var(--text-muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border)}
+tbody td{padding:14px;border-bottom:1px solid var(--border);font-size:13px}
+tbody tr:last-child td{border-bottom:none}
+tbody tr{transition:background .2s}
+tbody tr:hover{background:var(--bg-hover)}
+.status{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.status.success{background:rgba(16,185,129,0.15);color:var(--accent)}
+.status.pending{background:rgba(245,158,11,0.15);color:var(--warning)}
+.status.failed{background:rgba(239,68,68,0.15);color:var(--danger)}
+.user-cell{display:flex;align-items:center;gap:10px}
+.avatar-sm{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#8b5cf6);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px}
+.menu-btn{display:none}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:49}
+@media(max-width:900px){.charts-grid{grid-template-columns:1fr}}
+@media(max-width:768px){.sidebar{transform:translateX(100%)}.sidebar.open{transform:translateX(0)}.main{margin-right:0;padding:20px 16px}.menu-btn{display:flex}.topbar h1{font-size:22px}.stat-value{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<div class="brand">
+<div class="brand-logo">A</div>
+<div class="brand-name">Analy<span>tix</span></div>
+</div>
+<div class="nav-label">اصلی</div>
+<a class="nav-item active"><span class="nav-icon">📊</span> داشبورد</a>
+<a class="nav-item"><span class="nav-icon">📈</span> آنالیتیکس</a>
+<a class="nav-item"><span class="nav-icon">👥</span> کاربران<span class="nav-badge">+۱۲</span></a>
+<a class="nav-item"><span class="nav-icon">💳</span> تراکنش‌ها</a>
+<div class="nav-label">مدیریت</div>
+<a class="nav-item"><span class="nav-icon">📦</span> محصولات</a>
+<a class="nav-item"><span class="nav-icon">📝</span> گزارش‌ها</a>
+<a class="nav-item"><span class="nav-icon">⚙️</span> تنظیمات</a>
+<div class="sidebar-footer">
+<div class="user-card">
+<div class="user-avatar">م</div>
+<div class="user-info">
+<h4>محمد</h4>
+<p>مدیر سیستم</p>
+</div>
+</div>
+</div>
+</aside>
+<div class="overlay" id="overlay"></div>
+<main class="main">
+<div class="topbar">
+<div>
+<h1>داشبورد</h1>
+<p>خلاصه‌ای از عملکرد سیستم</p>
+</div>
+<div class="topbar-actions">
+<div class="search-box">
+<span class="search-icon">🔍</span>
+<input type="text" placeholder="جستجو...">
+</div>
+<button class="icon-btn" id="themeBtn" title="تغییر تم">🌙</button>
+<button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+<button class="icon-btn menu-btn" id="menuBtn">☰</button>
+</div>
+</div>
+<div class="stats-grid">
+<div class="stat-card">
+<div class="stat-header">
+<div><div class="stat-label">کاربران فعال</div></div>
+<div class="stat-icon purple">👥</div>
+</div>
+<div class="stat-value">۲۴,۵۸۱</div>
+<div class="stat-change up">▲ ۱۲.۵٪ نسبت به ماه قبل</div>
+</div>
+<div class="stat-card">
+<div class="stat-header">
+<div><div class="stat-label">درآمد کل</div></div>
+<div class="stat-icon green">💰</div>
+</div>
+<div class="stat-value">۸۴.۲M</div>
+<div class="stat-change up">▲ ۸.۲٪ نسبت به ماه قبل</div>
+</div>
+<div class="stat-card">
+<div class="stat-header">
+<div><div class="stat-label">سفارشات</div></div>
+<div class="stat-icon orange">📦</div>
+</div>
+<div class="stat-value">۱,۸۴۲</div>
+<div class="stat-change up">▲ ۳.۱٪ نسبت به ماه قبل</div>
+</div>
+<div class="stat-card">
+<div class="stat-header">
+<div><div class="stat-label">نرخ ریزش</div></div>
+<div class="stat-icon red">📉</div>
+</div>
+<div class="stat-value">۲.۴٪</div>
+<div class="stat-change down">▼ ۰.۸٪ نسبت به ماه قبل</div>
+</div>
+</div>
+<div class="charts-grid">
+<div class="card">
+<div class="card-header">
+<div>
+<div class="card-title">فروش هفتگی</div>
+<div class="card-subtitle">۷ روز اخیر (میلیون تومان)</div>
+</div>
+<button class="card-action">مشاهده همه →</button>
+</div>
+<div class="bar-chart" id="barChart"></div>
+</div>
+<div class="card">
+<div class="card-header">
+<div>
+<div class="card-title">منابع ترافیک</div>
+<div class="card-subtitle">توزیع بازدیدکنندگان</div>
+</div>
+</div>
+<div class="donut-wrapper">
+<svg class="donut" viewBox="0 0 200 200">
+<circle class="donut-bg" cx="100" cy="100" r="75"></circle>
+<circle class="donut-seg" cx="100" cy="100" r="75" stroke="#6366f1" stroke-dasharray="235 471" stroke-dashoffset="0"></circle>
+<circle class="donut-seg" cx="100" cy="100" r="75" stroke="#10b981" stroke-dasharray="141 471" stroke-dashoffset="-235"></circle>
+<circle class="donut-seg" cx="100" cy="100" r="75" stroke="#f59e0b" stroke-dasharray="70 471" stroke-dashoffset="-376"></circle>
+<circle class="donut-seg" cx="100" cy="100" r="75" stroke="#ef4444" stroke-dasharray="25 471" stroke-dashoffset="-446"></circle>
+</svg>
+<div class="donut-center">
+<h3>۱۰۰٪</h3>
+<p>کل بازدید</p>
+</div>
+<div class="legend">
+<div class="legend-item"><div class="legend-color" style="background:#6366f1"></div><span class="legend-label">جستجوی ارگانیک</span><span class="legend-value">۵۰٪</span></div>
+<div class="legend-item"><div class="legend-color" style="background:#10b981"></div><span class="legend-label">شبکه‌های اجتماعی</span><span class="legend-value">۳۰٪</span></div>
+<div class="legend-item"><div class="legend-color" style="background:#f59e0b"></div><span class="legend-label">تبلیغات</span><span class="legend-value">۱۵٪</span></div>
+<div class="legend-item"><div class="legend-color" style="background:#ef4444"></div><span class="legend-label">سایر</span><span class="legend-value">۵٪</span></div>
+</div>
+</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div>
+<div class="card-title">تراکنش‌های اخیر</div>
+<div class="card-subtitle">آخرین ۵ تراکنش سیستم</div>
+</div>
+<button class="card-action">مشاهده همه →</button>
+</div>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>کاربر</th><th>شناسه</th><th>مبلغ</th><th>وضعیت</th><th>تاریخ</th></tr>
+</thead>
+<tbody>
+<tr><td><div class="user-cell"><div class="avatar-sm">ع</div><span>علی محمدی</span></div></td><td>#TR-9284</td><td>۲,۴۵۰,۰۰۰ تومان</td><td><span class="status success">موفق</span></td><td>امروز ۱۴:۳۲</td></tr>
+<tr><td><div class="user-cell"><div class="avatar-sm" style="background:linear-gradient(135deg,#10b981,#34d399)">س</div><span>سارا احمدی</span></div></td><td>#TR-9283</td><td>۸۹۰,۰۰۰ تومان</td><td><span class="status success">موفق</span></td><td>امروز ۱۳:۱۵</td></tr>
+<tr><td><div class="user-cell"><div class="avatar-sm" style="background:linear-gradient(135deg,#f59e0b,#fbbf24)">ر</div><span>رضا کریمی</span></div></td><td>#TR-9282</td><td>۱,۲۰۰,۰۰۰ تومان</td><td><span class="status pending">در انتظار</span></td><td>امروز ۱۲:۰۸</td></tr>
+<tr><td><div class="user-cell"><div class="avatar-sm" style="background:linear-gradient(135deg,#ef4444,#f87171)">ز</div><span>زهرا رضایی</span></div></td><td>#TR-9281</td><td>۴۵۰,۰۰۰ تومان</td><td><span class="status failed">ناموفق</span></td><td>امروز ۱۱:۴۲</td></tr>
+<tr><td><div class="user-cell"><div class="avatar-sm" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa)">م</div><span>مهدی نوری</span></div></td><td>#TR-9280</td><td>۳,۷۸۰,۰۰۰ تومان</td><td><span class="status success">موفق</span></td><td>امروز ۱۰:۲۰</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+</div>
+<script>
+var salesData=[{day:'شنبه',value:45},{day:'یک‌شنبه',value:68},{day:'دوشنبه',value:52},{day:'سه‌شنبه',value:85},{day:'چهارشنبه',value:72},{day:'پنج‌شنبه',value:95},{day:'جمعه',value:60}];
+var maxValue=100;
+var barChart=document.getElementById('barChart');
+salesData.forEach(function(item){
+var heightPercent=(item.value/maxValue)*100;
+var wrapper=document.createElement('div');
+wrapper.className='bar-wrapper';
+wrapper.innerHTML='<div class="bar" style="height:'+heightPercent+'%" title="'+item.value+' میلیون"></div><div class="bar-label">'+item.day+'</div>';
+barChart.appendChild(wrapper);
+});
+var themeBtn=document.getElementById('themeBtn');
+var html=document.documentElement;
+themeBtn.addEventListener('click',function(){
+if(html.getAttribute('data-theme')==='light'){html.removeAttribute('data-theme');themeBtn.textContent='🌙'}
+else{html.setAttribute('data-theme','light');themeBtn.textContent='☀️'}
+});
+var menuBtn=document.getElementById('menuBtn');
+var sidebar=document.getElementById('sidebar');
+var overlay=document.getElementById('overlay');
+menuBtn.addEventListener('click',function(){sidebar.classList.toggle('open')});
+overlay.addEventListener('click',function(){sidebar.classList.remove('open')});
+var navItems=document.querySelectorAll('.nav-item');
+navItems.forEach(function(item){
+item.addEventListener('click',function(){
+navItems.forEach(function(i){i.classList.remove('active')});
+item.classList.add('active');
+});
+});
+console.log('Analytix Dashboard آماده است! 🚀');
+</script>
+</body>
+</html>
